@@ -10,7 +10,7 @@ const createAxiosInstance = (): AxiosInstance => {
     const instance = axios.create({
         baseURL,
         headers: {
-            Authorization: token ? `Bearer ${token}` : '',
+            Authorization: token ? token : '',
             'Content-Type': 'application/json',
         },
     });
