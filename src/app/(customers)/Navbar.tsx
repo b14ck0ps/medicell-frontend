@@ -5,9 +5,21 @@ import Logout from '@/lib/Logout';
 
 const Navbar: React.FC = () => {
     const [isAuth, setIsAuth] = useState(false);
+    const [cartItemCount, setCartItemCount] = useState(0);
 
     useState(() => {
         setIsAuth(localStorage.getItem('token') ? true : false);
+
+        // Retrieve the cart data from sessionStorage
+        const cartData = sessionStorage.getItem('cart');
+        const cartItems = cartData ? JSON.parse(cartData) : [];
+
+        // Calculate the total number of items in the cart
+        const itemCount = cartItems.reduce((total: number, item: { quantity: number }) => {
+            return total + item.quantity;
+        }, 0);
+
+        setCartItemCount(itemCount);
     },);
 
     return (
@@ -28,7 +40,14 @@ const Navbar: React.FC = () => {
                         </li>
                         <li>
                             <Link href="/cart" className="hover:text-gray-300">
-                                Cart
+                                <span className="relative">
+                                    Cart
+                                    {cartItemCount > 0 && (
+                                        <span className="absolute inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-500 rounded-full -right-3 -top-4">
+                                            {cartItemCount}
+                                        </span>
+                                    )}
+                                </span>
                             </Link>
                         </li>
                         <li>
