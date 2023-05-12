@@ -27,7 +27,7 @@ const ProductCard: React.FC = () => {
             {products.map(product => (
                 <div key={product.Id} className="max-w-sm mx-2 my-2 overflow-hidden bg-white rounded-lg shadow-md">
                     <Link href="/product/[id]" as={`/product/${product.Id}`} key={product.Id}>
-                        <img className="object-cover w-full h-48" src={product.ImageUrl} alt={product.Name} />
+                        <img className="object-cover w-full h-48 transition hover:transform hover:scale-105" src={product.ImageUrl} alt={product.Name} />
                     </Link>
                     <div className="p-4">
                         <h3 className="mb-2 text-xl font-medium">{product.Name}</h3>
