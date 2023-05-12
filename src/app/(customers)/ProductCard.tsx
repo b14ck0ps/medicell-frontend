@@ -1,8 +1,10 @@
 "use client";
-import React, { useEffect, useState } from 'react';
-import Link from "next/link";
-import axiosInstance from '@/lib/axiosInstance';
 import { Product } from '@/interfaces';
+import axiosInstance from '@/lib/axiosInstance';
+import Link from "next/link";
+import React, { useEffect, useState } from 'react';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ProductCard: React.FC = () => {
     const [products, setProducts] = useState<Product[]>([]);
@@ -18,8 +20,30 @@ const ProductCard: React.FC = () => {
     }, []);
 
     const handleAddToCart = (productId: number) => {
-        // Logic for adding the product to the cart
-        console.log(`Product ${productId} added to cart.`);
+        // Retrieve the cart data from sessionStorage
+        const cartData = sessionStorage.getItem('cart');
+        let cartItems = cartData ? JSON.parse(cartData) : [];
+
+        // Check if the product is already in the cart
+        const existingProduct = cartItems.find((item: { id: number }) => item.id === productId);
+
+        if (existingProduct) {
+            // Product already exists in the cart, increase the quantity
+            existingProduct.quantity += 1;
+
+            // Update the cart data in sessionStorage
+            sessionStorage.setItem('cart', JSON.stringify(cartItems));
+            toast.success('Quantity of product increased in the cart.');
+
+        } else {
+            // Product doesn't exist in the cart, add it as a new item
+            const newProduct = { id: productId, quantity: 1 };
+            cartItems = [...cartItems, newProduct];
+
+            // Update the cart data in sessionStorage
+            sessionStorage.setItem('cart', JSON.stringify(cartItems));
+            toast.success('Product added to cart.');
+        }
     };
 
     return (
@@ -31,7 +55,7 @@ const ProductCard: React.FC = () => {
                     </Link>
                     <div className="p-4">
                         <h3 className="mb-2 text-xl font-medium">{product.Name}</h3>
-                        <p className="text-gray-700">{product.Description}</p>
+                        <p className="text-gray-700 truncate">{product.Description}</p>
                         <div className="flex items-center justify-between mt-4">
                             <span className="font-bold text-gray-900">${product.Price}</span>
                             <span className={product.IsAvailable ? 'text-green-500' : 'text-red-500'}>
@@ -47,6 +71,7 @@ const ProductCard: React.FC = () => {
                     </div>
                 </div>
             ))}
+            <ToastContainer position="bottom-left" />
         </div>
     );
 };
