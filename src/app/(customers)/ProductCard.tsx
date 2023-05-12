@@ -44,6 +44,11 @@ const ProductCard: React.FC = () => {
             sessionStorage.setItem('cart', JSON.stringify(cartItems));
             toast.success('Product added to cart.');
         }
+        setTimeout(() => {
+            // Reload the page
+            // This is the worst way to do it, but for now it's the only way. I'll fix it later when i learn more about React redux and context
+            window.location.reload();
+        }, 500);
     };
 
     return (
