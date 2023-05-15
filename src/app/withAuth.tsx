@@ -24,13 +24,17 @@ const withAuth = (WrappedComponent: React.ComponentType) => {
                 } catch (error) {
                     console.error(error);
                     window.location.href = '/login'; // Redirect to login page if there is any error
-                } finally {
-                    setAuthChecked(true); // Set authChecked to true after the authentication check is complete
                 }
             };
 
             checkTokenValidity();
         }, []);
+
+        useEffect(() => {
+            if (authChecked) {
+                setAuthChecked(true);
+            }
+        }, [authChecked]);
 
         // Render the WrappedComponent only when the authentication check is complete
         return authChecked ? <WrappedComponent {...props} /> : null;
