@@ -28,14 +28,8 @@ const withAuth = (WrappedComponent: React.ComponentType) => {
             };
 
             checkTokenValidity();
+            setAuthChecked(true);
         }, []);
-
-        useEffect(() => {
-            if (authChecked) {
-                setAuthChecked(true);
-            }
-        }, [authChecked]);
-
         // Render the WrappedComponent only when the authentication check is complete
         return authChecked ? <WrappedComponent {...props} /> : null;
     };
