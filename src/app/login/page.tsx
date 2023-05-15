@@ -1,6 +1,7 @@
 "use client"
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import axios from 'axios';
+import axiosInstance from '@/lib/axiosInstance';
 
 interface LoginResponse {
     TKey: string;
@@ -38,7 +39,20 @@ const LoginForm: React.FC = () => {
                 // Handle the response data
                 localStorage.setItem('token', response.data.TKey);
                 setLoading(true);
-                window.location.href = '/';
+                // Get the user's ID
+                const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+                const user = await axiosInstance.post('/auth/user', { Tkey: token });
+                const orderedBy = user.data.Id;
+
+                if (user.data.Role === 0) {
+                    window.location.href = '/dashboard/admin';
+                } else if (user.data.Role === 1) {
+                    window.location.href = '/';
+                } else if (user.data.Role === 2) {
+                    window.location.href = '/dashboard/finance';
+                } else if (user.data.Role === 3) {
+                    window.location.href = '/dashboard/delivery';
+                }
             }
             // Redirect or perform any other actions as needed
         } catch (error) {
