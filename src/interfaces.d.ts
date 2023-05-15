@@ -14,3 +14,16 @@ export type Props = {
         id: string;
     }
 };
+export interface User {
+    Id: number;
+    FirstName: string;
+    LastName: string;
+    Gender: number;
+    DateOfBirth: string;
+    Email: string;
+    Phone: string;
+    ProfilePicture: string;
+    Address: string;
+    Password: string;
+    Role: number;
+}
