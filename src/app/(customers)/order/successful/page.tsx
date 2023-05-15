@@ -1,6 +1,7 @@
+import withAuth from '@/app/withAuth'
 import React from 'react'
 
-export default function page() {
+function page() {
     return (
         <div>
             <div className="flex flex-col items-center justify-center h-screen">
@@ -26,3 +27,4 @@ export default function page() {
         </div>
     )
 }
+export default withAuth(page);

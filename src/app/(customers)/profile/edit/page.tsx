@@ -1,4 +1,5 @@
 "use client";
+import withAuth from '@/app/withAuth';
 import axiosInstance from '@/lib/axiosInstance';
 import React, { useEffect, useState } from 'react';
 
@@ -229,4 +230,4 @@ const ProfilePage: React.FC = () => {
     );
 };
 
-export default ProfilePage;
+export default withAuth(ProfilePage);

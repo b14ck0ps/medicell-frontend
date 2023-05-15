@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import axiosInstance from '@/lib/axiosInstance';
 import Link from 'next/link';
+import withAuth from '@/app/withAuth';
 
 interface Order {
     Id: number;
@@ -100,4 +101,4 @@ const OrdersTable: React.FC = () => {
     );
 };
 
-export default OrdersTable;
+export default withAuth(OrdersTable);

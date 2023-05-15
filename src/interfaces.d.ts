@@ -9,11 +9,9 @@ export interface Product {
     CategoryId: number;
     CompanyId: number;
 }
-export type Props = {
-    params: {
-        id: string;
-    }
-};
+interface Props {
+    params?: any
+}
 export interface User {
     Id: number;
     FirstName: string;

@@ -1,4 +1,5 @@
 "use client";
+import withAuth from '@/app/withAuth';
 import { Props } from '@/interfaces';
 import axiosInstance from '@/lib/axiosInstance';
 import React, { useEffect, useState } from 'react';
@@ -108,4 +109,4 @@ function ProductOrder({ params }: Props) {
     );
 };
 
-export default ProductOrder;
+export default withAuth(ProductOrder);

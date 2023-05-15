@@ -3,6 +3,7 @@ import React, { use } from 'react';
 import axiosInstance from '@/lib/axiosInstance';
 import { User } from '@/interfaces';
 import Link from 'next/link';
+import withAuth from '@/app/withAuth';
 
 const ProfilePage: React.FC = () => {
     const [user, setUser] = React.useState<User | null>(null);
@@ -68,4 +69,4 @@ const ProfilePage: React.FC = () => {
     );
 };
 
-export default ProfilePage;
+export default withAuth(ProfilePage);

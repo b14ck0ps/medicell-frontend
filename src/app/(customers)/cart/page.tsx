@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '@/lib/axiosInstance';
 import Link from 'next/link';
+import withAuth from '@/app/withAuth';
 
 const CartTable: React.FC = () => {
     const [cartItems, setCartItems] = useState<any[]>([]);
@@ -238,4 +239,4 @@ const CartTable: React.FC = () => {
     );
 };
 
-export default CartTable;
+export default withAuth(CartTable);
