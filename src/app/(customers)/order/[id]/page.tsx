@@ -44,24 +44,34 @@ function ProductOrder({ params }: Props) {
     const handleDownloadPDF = () => {
         const doc = new jsPDF();
         doc.setFontSize(18);
-        doc.setFont('helvetica', 'bold'); // Set font family and style
+        doc.setFont('helvetica', 'bold');
         doc.text('MediCell', doc.internal.pageSize.getWidth() / 2, 10, { align: 'center' });
         doc.setFontSize(12);
-        doc.setFont('helvetica', 'normal'); // Reset font style
+        doc.setFont('helvetica', 'normal');
         doc.text(order.OderDate, doc.internal.pageSize.getWidth() - 20, 10, { align: 'right' });
         doc.text(`Order Details - Order #${params.id}`, 10, 10);
-        // @ts-ignore
-        doc.autoTable({
-            head: [['Product Name', 'Quantity', 'Price', 'Total Price']],
-            body: orders.map((order) => [
+
+        const totalPrice = orders.reduce((total, order) => total + order.Quantity * order.ProductPrice, 0);
+
+        const tableData = [
+            ...orders.map(order => [
                 order.ProductName,
                 order.Quantity,
                 order.ProductPrice,
                 order.Quantity * order.ProductPrice,
             ]),
+            ['', '', 'Total Price', totalPrice],
+        ];
+
+        // @ts-ignore
+        doc.autoTable({
+            head: [['Product Name', 'Quantity', 'Price', 'Total Price']],
+            body: tableData,
         });
+
         doc.save(`order_${params.id}.pdf`);
     };
+
 
     return (
         <div className='mx-56 mt-2'>
