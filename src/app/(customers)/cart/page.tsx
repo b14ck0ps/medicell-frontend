@@ -89,6 +89,45 @@ const CartTable: React.FC = () => {
         fetchProductDetails(filteredCartItems);
     };
 
+    const handleCheckOut = async () => {
+        try {
+            // Get the user's ID
+            const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+            const response = await axiosInstance.post('/auth/user', { Tkey: token });
+            const orderedBy = response.data.Id;
+
+            // Create the order object
+            const order = {
+                Total: totalPrice,
+                OrderedBy: orderedBy,
+            };
+
+            // Send the order request
+            const orderResponse = await axiosInstance.post('/order', order);
+            const orderId = orderResponse.data;
+
+            // Create the product order objects
+            const productOrders = cartItems.map((item) => ({
+                Quantity: item.quantity,
+                ProductId: item.id,
+                OrderId: orderId,
+            }));
+
+            // Send the product order request
+            await axiosInstance.post('/productorder', productOrders);
+
+            // Clear the cart
+            setCartItems([]);
+            setTotalItems(0);
+            setTotalPrice(0);
+            sessionStorage.removeItem('cart');
+            window.location.reload();
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+
     return (
         <div>
             {products.length > 0 ? (
@@ -173,7 +212,9 @@ const CartTable: React.FC = () => {
                                     <span>Total cost</span>
                                     <span>${totalPrice}</span>
                                 </div>
-                                <button className="w-full py-3 text-sm font-semibold text-white uppercase bg-indigo-500 hover:bg-indigo-600">Checkout</button>
+                                <button
+                                    onClick={() => handleCheckOut()}
+                                    className="w-full py-3 text-sm font-semibold text-white uppercase bg-indigo-500 hover:bg-indigo-600">Checkout</button>
                             </div>
                         </div>
 
