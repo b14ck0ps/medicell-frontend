@@ -2,7 +2,9 @@
 import withAuth from '@/app/withAuth';
 import { Props } from '@/interfaces';
 import axiosInstance from '@/lib/axiosInstance';
-import React, { useEffect, useState } from 'react';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import { useEffect, useState } from 'react';
 
 interface Order {
     Id: number;
@@ -38,6 +40,22 @@ function ProductOrder({ params }: Props) {
         fetchOrder();
         fetchOrders();
     }, [params.id]);
+
+    const handleDownloadPDF = () => {
+        const doc = new jsPDF();
+        doc.text(`Order Details - Order #${params.id}`, 10, 10);
+        // @ts-ignore
+        doc.autoTable({
+            head: [['Product Name', 'Quantity', 'Price', 'Total Price']],
+            body: orders.map((order) => [
+                order.ProductName,
+                order.Quantity,
+                order.ProductPrice,
+                order.Quantity * order.ProductPrice,
+            ]),
+        });
+        doc.save(`order_${params.id}.pdf`);
+    };
 
     return (
         <div className='mx-56 mt-2'>
@@ -101,6 +119,12 @@ function ProductOrder({ params }: Props) {
                     </tbody>
                 </table>
             </div>
+            <button
+                className='flex mt-4 text-sm font-semibold text-indigo-600'
+                onClick={handleDownloadPDF}
+            >
+                Download PDF
+            </button>
             <a href="/orders" className="flex mt-10 text-sm font-semibold text-indigo-600">
                 <svg className="w-4 mr-2 text-indigo-600 fill-current" viewBox="0 0 448 512"><path d="M134.059 296H436c6.627 0 12-5.373 12-12v-56c0-6.627-5.373-12-12-12H134.059v-46.059c0-21.382-25.851-32.09-40.971-16.971L7.029 239.029c-9.373 9.373-9.373 24.569 0 33.941l86.059 86.059c15.119 15.119 40.971 4.411 40.971-16.971V296z" /></svg>
                 Go Back
