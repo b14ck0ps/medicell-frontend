@@ -16,6 +16,15 @@ const RegistrationForm: React.FC = () => {
         Role: 1, // 1 for customer
     });
 
+    const [formErrors, setFormErrors] = useState({
+        FirstName: '',
+        LastName: '',
+        Email: '',
+        Phone: '',
+        Address: '',
+        Password: '',
+    });
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData(prevState => ({
@@ -28,15 +37,38 @@ const RegistrationForm: React.FC = () => {
 
     const handleSubmit = (e: any) => {
         e.preventDefault();
+        // Reset form errors
+        setFormErrors({
+            FirstName: '',
+            LastName: '',
+            Email: '',
+            Phone: '',
+            Address: '',
+            Password: '',
+        });
+
         axiosInstance.post('user', formData)
             .then(response => {
                 window.location.href = '/login';
             })
             .catch(error => {
-                // Handle registration error
+                if (error.response && error.response.data && error.response.data.ModelState) {
+                    const errors = error.response.data.ModelState;
+                    // Update form errors based on the response
+                    setFormErrors(prevState => ({
+                        ...prevState,
+                        FirstName: errors["customer.FirstName"] ? errors["customer.FirstName"][0] : '',
+                        LastName: errors["customer.LastName"] ? errors["customer.LastName"][0] : '',
+                        Email: errors["customer.Email"] ? errors["customer.Email"][0] : '',
+                        Phone: errors["customer.Phone"] ? errors["customer.Phone"][0] : '',
+                        Address: errors["customer.Address"] ? errors["customer.Address"][0] : '',
+                        Password: errors["customer.Password"] ? errors["customer.Password"][0] : '',
+                    }));
+                }
                 console.error(error);
             });
     };
+    ;
 
     return (
         <div className="max-w-md p-4 mx-auto mt-8 bg-white rounded-lg shadow-md">
@@ -52,8 +84,8 @@ const RegistrationForm: React.FC = () => {
                             className="w-full p-2 border border-gray-300 rounded"
                             value={formData.FirstName}
                             onChange={handleChange}
-                            required
                         />
+                        {formErrors.FirstName && <p className="mt-1 text-xs text-red-500">{formErrors.FirstName}</p>}
                     </div>
                     <div className="mb-4">
                         <label htmlFor="lastName" className="block font-medium">Last Name</label>
@@ -64,8 +96,8 @@ const RegistrationForm: React.FC = () => {
                             className="w-full p-2 border border-gray-300 rounded"
                             value={formData.LastName}
                             onChange={handleChange}
-                            required
                         />
+                        {formErrors.LastName && <p className="mt-1 text-xs text-red-500">{formErrors.LastName}</p>}
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -105,8 +137,8 @@ const RegistrationForm: React.FC = () => {
                         className="w-full p-2 border border-gray-300 rounded"
                         value={formData.Email}
                         onChange={handleChange}
-                        required
                     />
+                    {formErrors.Email && <p className="mt-1 text-xs text-red-500">{formErrors.Email}</p>}
                 </div>
                 <div className="mb-4">
                     <label htmlFor="phone" className="block font-medium">Phone</label>
@@ -117,8 +149,8 @@ const RegistrationForm: React.FC = () => {
                         className="w-full p-2 border border-gray-300 rounded"
                         value={formData.Phone}
                         onChange={handleChange}
-                        required
                     />
+                    {formErrors.Phone && <p className="mt-1 text-xs text-red-500">{formErrors.Phone}</p>}
                 </div>
                 <div className="mb-4">
                     <label htmlFor="address" className="block font-medium">Address</label>
@@ -129,8 +161,8 @@ const RegistrationForm: React.FC = () => {
                         className="w-full p-2 border border-gray-300 rounded"
                         value={formData.Address}
                         onChange={handleChange}
-                        required
                     />
+                    {formErrors.Address && <p className="mt-1 text-xs text-red-500">{formErrors.Address}</p>}
                 </div>
                 <div className="mb-4">
                     <label htmlFor="password" className="block font-medium">Password</label>
@@ -141,8 +173,8 @@ const RegistrationForm: React.FC = () => {
                         className="w-full p-2 border border-gray-300 rounded"
                         value={formData.Password}
                         onChange={handleChange}
-                        required
                     />
+                    {formErrors.Password && <p className="mt-1 text-xs text-red-500">{formErrors.Password}</p>}
                 </div>
                 <div className="mb-4">
                     <label htmlFor="profilePicture" className="block font-medium">Profile Picture</label>
