@@ -1,3 +1,4 @@
+"use client";
 import withAuth from '@/app/withAuth'
 import React from 'react'
 
