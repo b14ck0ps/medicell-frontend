@@ -43,6 +43,52 @@ const CartTable: React.FC = () => {
         }
     };
 
+    const handleRemove = (productId: number) => {
+        const updatedCartItems = cartItems.filter((item) => item.id !== productId);
+        setCartItems(updatedCartItems);
+        updateSessionStorage(updatedCartItems);
+        fetchProductDetails(updatedCartItems);
+    };
+
+    const updateSessionStorage = (cartItems: any[]) => {
+        const cartData = JSON.stringify(cartItems);
+        sessionStorage.setItem('cart', cartData);
+        window.location.reload();
+    };
+
+    const handleIncrease = (productId: number) => {
+        const updatedCartItems = cartItems.map((item) => {
+            if (item.id === productId) {
+                return { ...item, quantity: item.quantity + 1 };
+            }
+            return item;
+        });
+        setCartItems(updatedCartItems);
+        updateSessionStorage(updatedCartItems);
+        fetchProductDetails(updatedCartItems);
+    };
+
+    const handleDecrease = (productId: number) => {
+        const updatedCartItems = cartItems.map((item) => {
+            if (item.id === productId) {
+                const newQuantity = item.quantity - 1;
+                if (newQuantity > 0) {
+                    return { ...item, quantity: newQuantity };
+                } else {
+                    handleRemove(item.id);
+                    return null;
+                }
+            }
+            return item;
+        });
+
+        const filteredCartItems = updatedCartItems.filter((item) => item !== null);
+
+        setCartItems(filteredCartItems);
+        updateSessionStorage(filteredCartItems);
+        fetchProductDetails(filteredCartItems);
+    };
+
     return (
         <div>
             {products.length > 0 ? (
@@ -73,17 +119,20 @@ const CartTable: React.FC = () => {
                                                 <div className="flex flex-col justify-between flex-grow ml-4">
                                                     <span className="text-sm font-bold">{product.Name}</span>
                                                     <span className="text-xs text-red-500">{product.Brand}</span>
-                                                    <a href="#" className="text-xs font-semibold text-gray-500 hover:text-red-500">Remove</a>
+                                                    <a onClick={() => handleRemove(product.Id)} className="text-xs font-semibold text-gray-500 hover:cursor-pointer hover:text-red-500">Remove</a>
                                                 </div>
                                             </div>
                                             <div className="flex justify-center w-1/5">
-                                                <svg className="w-3 text-gray-600 fill-current" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
-                                                </svg>
-                                                <input className="w-8 mx-2 text-center border" type="text" value={quantity} />
-                                                <svg className="w-3 text-gray-600 fill-current" viewBox="0 0 448 512">
-
-                                                    <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
-                                                </svg>
+                                                <button onClick={() => handleDecrease(product.Id)} className="text-gray-500 focus:outline-none focus:text-gray-600">
+                                                    <svg className="w-3 text-gray-600 fill-current" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
+                                                    </svg>
+                                                </button>
+                                                <input className="w-8 mx-2 text-center border" type="text" value={quantity} readOnly />
+                                                <button onClick={() => handleIncrease(product.Id)} className="text-gray-500 focus:outline-none focus:text-gray-600">
+                                                    <svg className="w-3 text-gray-600 fill-current" viewBox="0 0 448 512">
+                                                        <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
+                                                    </svg>
+                                                </button>
                                             </div>
                                             <span className="w-1/5 text-sm font-semibold text-center text-gray-600">{product.Price}</span>
                                             <span className="w-1/5 text-sm font-semibold text-center text-gray-600">{product.Price * quantity}</span>
@@ -110,7 +159,8 @@ const CartTable: React.FC = () => {
                             <div>
                                 <label className="inline-block mb-3 text-sm font-medium uppercase">Shipping</label>
                                 <select className="block w-full p-2 text-sm text-gray-600">
-                                    <option>Standard shipping - $10.00</option>
+                                    <option>Standard shipping - $0.00</option>
+                                    <option>Premium shipping - $10.00</option>
                                 </select>
                             </div>
                             <div className="py-10">
@@ -121,7 +171,7 @@ const CartTable: React.FC = () => {
                             <div className="mt-8 border-t">
                                 <div className="flex justify-between py-6 text-sm font-semibold uppercase">
                                     <span>Total cost</span>
-                                    <span>$600</span>
+                                    <span>${totalPrice}</span>
                                 </div>
                                 <button className="w-full py-3 text-sm font-semibold text-white uppercase bg-indigo-500 hover:bg-indigo-600">Checkout</button>
                             </div>
