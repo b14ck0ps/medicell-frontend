@@ -51,8 +51,8 @@ const Navbar: React.FC = () => {
                             </Link>
                         </li>
                         <li>
-                            <Link href="/order" className="hover:text-gray-300">
-                                Order
+                            <Link href="/orders" className="hover:text-gray-300">
+                                Orders
                             </Link>
                         </li>
                         <li>
