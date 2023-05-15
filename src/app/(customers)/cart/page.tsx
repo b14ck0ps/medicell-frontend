@@ -123,7 +123,7 @@ const CartTable: React.FC = () => {
             setTotalItems(0);
             setTotalPrice(0);
             sessionStorage.removeItem('cart');
-            window.location.reload();
+            window.location.href = '/order/successful';
         } catch (error) {
             console.error(error);
         }
