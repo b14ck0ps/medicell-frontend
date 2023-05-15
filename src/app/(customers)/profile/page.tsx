@@ -63,6 +63,10 @@ const ProfilePage: React.FC = () => {
                     <p className='text-sm text-gray-600'>Phone Number</p>
                     <p>{user.Phone}</p>
                 </div>
+                <div className="mb-3">
+                    <p className='text-sm text-gray-600'>Date Of Birth</p>
+                    <p>{new Date(user.DateOfBirth).toLocaleDateString()}</p>
+                </div>
             </div>
             <Link href="/profile/edit" className='px-5 py-2 m-5 text-white bg-blue-600 rounded-lg hover:bg-blue-800 hover:cursor-pointer' >Edit</Link>
         </div>
