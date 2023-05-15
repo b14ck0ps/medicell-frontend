@@ -1,6 +1,7 @@
 "use client";
 import withAuth from '@/app/withAuth';
 import { Props } from '@/interfaces';
+import { formatDate } from '@/lib/FormatedDateTime';
 import axiosInstance from '@/lib/axiosInstance';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
@@ -48,7 +49,7 @@ function ProductOrder({ params }: Props) {
         doc.text('MediCell', doc.internal.pageSize.getWidth() / 2, 10, { align: 'center' });
         doc.setFontSize(12);
         doc.setFont('helvetica', 'normal');
-        doc.text(order.OderDate, doc.internal.pageSize.getWidth() - 20, 10, { align: 'right' });
+        doc.text(formatDate(order.OderDate), doc.internal.pageSize.getWidth() - 20, 10, { align: 'right' });
         doc.text(`Order Details - Order #${params.id}`, 10, 10);
 
         const totalPrice = orders.reduce((total, order) => total + order.Quantity * order.ProductPrice, 0);

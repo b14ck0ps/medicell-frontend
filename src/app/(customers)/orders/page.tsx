@@ -1,14 +1,10 @@
 "use client";
-import { useEffect, useState } from 'react';
+import withAuth from '@/app/withAuth';
+import { Order } from '@/interfaces';
+import { formatDate } from '@/lib/FormatedDateTime';
 import axiosInstance from '@/lib/axiosInstance';
 import Link from 'next/link';
-import withAuth from '@/app/withAuth';
-
-interface Order {
-    Id: number;
-    OderDate: string;
-    Total: number;
-}
+import { useEffect, useState } from 'react';
 
 const OrdersTable: React.FC = () => {
     const [id, setId] = useState<number>(0);
@@ -38,21 +34,6 @@ const OrdersTable: React.FC = () => {
             fetchOrders();
         }
     }, [id]);
-
-
-    const formatDate = (dateString: string) => {
-        const date = new Date(dateString);
-        const options: Intl.DateTimeFormatOptions = {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: 'numeric',
-            minute: 'numeric',
-        };
-        const formattedDate = new Intl.DateTimeFormat(undefined, options).format(date);
-        return formattedDate;
-    };
-
 
     return (
         <div className='mx-32 mt-2'>

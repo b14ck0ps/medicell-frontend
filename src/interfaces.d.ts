@@ -25,3 +25,8 @@ export interface User {
     Password: string;
     Role: number;
 }
+export interface Order {
+    Id: number;
+    OderDate: string;
+    Total: number;
+}
